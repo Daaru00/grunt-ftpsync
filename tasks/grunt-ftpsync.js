@@ -4,13 +4,13 @@ var util = require('util');
 
 module.exports = function(grunt) {
 
-  grunt.registerTask('ftpsync', 'Intelligent file syncronization over FTP', function() {
+  grunt.registerMultiTask('ftpsync', 'Intelligent file syncronization over FTP', function() {
 	var done = this.async();
 	// fail if settings are missing
 	if (!grunt.config('ftpsync')) { console.error('fpsync settings not found'); }
 
 	// fetch the config
-	var config = grunt.config('ftpsync');
+	var config = this.options();
 
 	// run the sync
 	var ftpsync = require('ftpsync');
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 	ftpsync.settings.pass = config.pass;
 	ftpsync.settings.connections = config.connections;
 	ftpsync.settings.ignore = config.ignore;
-	ftpsync.log.verbose = true;
+	ftpsync.log.verbose = config.verbose || false;
 	ftpsync.log.write = function(msg) { grunt.log.writeln(util.inspect(msg)); };
 	ftpsync.log.info = grunt.log.ok;
 	ftpsync.log.warn = grunt.log.error;
